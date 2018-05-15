@@ -1,5 +1,4 @@
 from bs4 import BeautifulSoup
-from lxml import html
 import urllib
 
 url = urllib.request.urlopen('https://www.metal-archives.com/browse/letter')
