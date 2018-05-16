@@ -44,6 +44,7 @@ def get_rec_number(line):
 
 tmp = get_rec_number_line(url)
 result = []
+output = []
 
 
 def get_records():
@@ -65,19 +66,24 @@ def fix_band_name(xx):
 
 
 def make_new_json():
-    get_records()
-    counter = 1
+    get_records()   
     for lines in result:   
         for line in lines:
             nameLink = fix_band_name(line[0])
-            print("{0}: {1}, {2}, {3}, {4}, {5}".format(counter, nameLink[0], nameLink[1], line[1], line[2], strip_tags(line[3])))
-            counter += 1
+            newJson = {}
+            newJson["Name"] = nameLink[0]
+            newJson["Link"] = nameLink[1]
+            newJson["Country"] = line[1]
+            newJson["Genre"] = line[2]
+            newJson["Status"] = strip_tags(line[3])
+            output.append(newJson)            
+    json.dumps(output, ensure_ascii=False)
 
 
 def write_to_file():
+    make_new_json()
     with open(outputFile, 'w') as outfile:   
-        json.dump(result, outfile, indent=1)
+        json.dump(output, outfile, indent=1)
 
 
-make_new_json()
-#write_to_file()
+write_to_file()
