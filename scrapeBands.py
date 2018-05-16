@@ -57,10 +57,10 @@ def get_records():
             counter += 500
 
 
-def fix_band_name(xx):
-    x = BeautifulSoup(xx, "html.parser")
-    name = x.get_text()  
-    for link in x.find_all('a'):
+def fix_band_name(nl):
+    soup = BeautifulSoup(nl, "html.parser")
+    name = soup.get_text()  
+    for link in soup.find_all('a'):
         lnk = link.get('href')       
     return name, lnk
 
