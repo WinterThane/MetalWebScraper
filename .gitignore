@@ -300,6 +300,4 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
-BandLetters.txt
-Z_Bands.txt
-Alphabet.txt
+*.txt

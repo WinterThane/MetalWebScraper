@@ -32,4 +32,5 @@ def write_file():
             outfile.write('%s\n' % link)
 
 
-write_file()
+if __name__ == "__main__":
+    write_file()

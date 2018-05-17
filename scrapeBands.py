@@ -20,11 +20,22 @@ def strip_tags(html):
     return s.get_data()
 
 
+def make_filename(letter):
+    if not letter:
+        return "Z_Bands.txt"
+    else:
+        return (letter + "_Bands.txt")
+
+
 urlPrefix = "https://www.metal-archives.com/browse/ajax-letter/l/"
-urlLetter = "Z"
 urlSuffix = "/json/1?sEcho=1&iColumns=4&sColumns=&iDisplayStart="
-outputFile = urlLetter + "_Bands.txt"
-url = urllib.request.urlopen(urlPrefix + urlLetter + urlSuffix + "0")
+
+
+def make_url(letter):   
+    if not letter:
+        return (urlPrefix + "Z" + urlSuffix)
+    else:
+        return (urlPrefix + letter + urlSuffix)
 
 
 def get_rec_number_line(lines):
@@ -42,16 +53,17 @@ def get_rec_number(line):
             return d
 
 
-tmp = get_rec_number_line(url)
 result = []
 output = []
 
 
-def get_records():
+def get_records(letter):
+    url = make_url(letter)
+    tmp = get_rec_number_line(urllib.request.urlopen(url + "0"))
     recNumber = int(get_rec_number(tmp))
     counter = 0
     while counter < recNumber:
-        with urllib.request.urlopen(urlPrefix + urlLetter + urlSuffix + str(counter)) as url:
+        with urllib.request.urlopen(urlPrefix + letter + urlSuffix + str(counter)) as url:
             data = json.loads(url.read().decode())
             result.append(data['aaData'])
             counter += 500
@@ -65,8 +77,8 @@ def fix_band_name(nl):
     return name, lnk
 
 
-def make_new_json():
-    get_records()   
+def make_new_json(letter):
+    get_records(letter)   
     for lines in result:   
         for line in lines:
             nameLink = fix_band_name(line[0])
@@ -80,10 +92,18 @@ def make_new_json():
     json.dumps(output, ensure_ascii=False)
 
 
-def write_to_file():
-    make_new_json()
-    with open(outputFile, 'w') as outfile:   
+def clean_lists():
+    result.clear()
+    output.clear()
+
+
+def write_to_file(letter):
+    make_new_json(letter)
+    with open(make_filename(letter), 'w') as outfile:   
         json.dump(output, outfile, indent=1)
+    clean_lists()
 
 
-write_to_file()
+#if __name__ == '__main__':
+    #outputFile = make_filename("Z")
+    #write_to_file()
